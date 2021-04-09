@@ -36,6 +36,25 @@ class PersonDao_Impl : IPersonDao {
         return result
     }
 
+    override fun getByName(s: String): List<BEPerson> {
+        val result = ArrayList<BEPerson>()
+        //val query = "select * from Person where name like '%s%' order by id"
+        val cursor = mDatabase.query("Person", arrayOf("id", "name", "age"), "name LIKE '%$s%'", null, null, null, "id")
+        //val cursor = mDatabase.rawQuery(query, null)
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getString(cursor.getColumnIndex("id")).toInt()
+                val name = cursor.getString(cursor.getColumnIndex("name"))
+                val age = cursor.getString(cursor.getColumnIndex("age")).toInt()
+                result.add(BEPerson(id, name, age))
+            } while (cursor.moveToNext())
+
+        }
+        Log.d(MainActivity.TAG, "Dao Impl - getByName($s) returned ${result.size} persons")
+        return result
+    }
+
+
     override fun getAllNames(): List<String> {
         return getAll().map { p -> p.name }
     }

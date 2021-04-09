@@ -76,7 +76,8 @@ class MainActivity : AppCompatActivity() {
     fun onClickFilter(view: View){
         if (! filterActive ) {
 
-            val persons = mRep.getAll().filter { p -> p.name.contains(etName.text.toString()) }
+            //val persons = mRep.getAll().filter { p -> p.name.contains(etName.text.toString()) }
+            val persons = mRep.getByName(etName.text.toString())
             setAdapterforListView(persons)
             filterActive = true
             btnFilter.text = resources.getString(R.string.remove_filter)

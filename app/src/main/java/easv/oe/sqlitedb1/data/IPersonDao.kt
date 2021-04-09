@@ -4,6 +4,8 @@ interface IPersonDao {
 
     fun getAll(): List<BEPerson>
 
+    fun getByName(s:String): List<BEPerson>
+
     fun getAllNames(): List<String>
 
     fun getById(id: Int): BEPerson
