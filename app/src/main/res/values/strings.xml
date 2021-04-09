@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SQLiteDB1</string>
+    <string name="use_filter">Use Filter</string>
+    <string name="remove_filter">See All</string>
+</resources>
