@@ -2,6 +2,7 @@ package easv.oe.sqlitedb1.data
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
@@ -18,55 +19,30 @@ class PersonDao_Impl : IPersonDao {
         mDatabase = openHelper.writableDatabase
 
     }
+
     override fun getAll(): List<BEPerson> {
-        val result = ArrayList<BEPerson>()
         //val query = "select * from Person order by id"
         val cursor = mDatabase.query("Person", arrayOf("id", "name", "age"), null, null, null, null, "id")
         //val cursor = mDatabase.rawQuery(query, null)
-        if (cursor.moveToFirst()) {
-            do {
-                val id = cursor.getString(cursor.getColumnIndex("id")).toInt()
-                val name = cursor.getString(cursor.getColumnIndex("name"))
-                val age = cursor.getString(cursor.getColumnIndex("age")).toInt()
-                result.add(BEPerson(id, name, age))
-            } while (cursor.moveToNext())
-
-        }
+        val result = getByCursor(cursor)
         Log.d(MainActivity.TAG, "Dao Impl - getAll() returned ${result.size} persons")
         return result
     }
 
     override fun getByName(s: String): List<BEPerson> {
-        val result = ArrayList<BEPerson>()
         //val query = "select * from Person where name like '%s%' order by id"
         val cursor = mDatabase.query("Person", arrayOf("id", "name", "age"), "name LIKE '%$s%'", null, null, null, "id")
         //val cursor = mDatabase.rawQuery(query, null)
-        if (cursor.moveToFirst()) {
-            do {
-                val id = cursor.getString(cursor.getColumnIndex("id")).toInt()
-                val name = cursor.getString(cursor.getColumnIndex("name"))
-                val age = cursor.getString(cursor.getColumnIndex("age")).toInt()
-                result.add(BEPerson(id, name, age))
-            } while (cursor.moveToNext())
-
-        }
+        val result = getByCursor(cursor)
         Log.d(MainActivity.TAG, "Dao Impl - getByName($s) returned ${result.size} persons")
         return result
     }
 
-
-    override fun getAllNames(): List<String> {
-        return getAll().map { p -> p.name }
-    }
-
     override fun getById(id: Int): BEPerson {
         val cursor = mDatabase.query("Person", arrayOf("id", "name", "age"), "id=$id", null, null, null, "id")
-        //val cursor = mDatabase.rawQuery(query, null)
-        if (cursor.moveToFirst()) {
-                val id = cursor.getString(cursor.getColumnIndex("id")).toInt()
-                val name = cursor.getString(cursor.getColumnIndex("name"))
-                val age = cursor.getString(cursor.getColumnIndex("age")).toInt()
-                return BEPerson(id, name, age)
+        val result = getByCursor(cursor)
+        if (result.isNotEmpty()) {
+            return result[0]
         }
         else {
             Log.d(MainActivity.TAG, "Dao Impl - getById failed - no person with id = $id")
@@ -74,6 +50,23 @@ class PersonDao_Impl : IPersonDao {
         }
         //Easy impl
         //return getAll().filter {p -> p.id == id}[0]
+    }
+
+    private fun getByCursor(cursor: Cursor): List<BEPerson> {
+        val result = ArrayList<BEPerson>()
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getString(cursor.getColumnIndex("id")).toInt()
+                val name = cursor.getString(cursor.getColumnIndex("name"))
+                val age = cursor.getString(cursor.getColumnIndex("age")).toInt()
+                result.add(BEPerson(id, name, age))
+            } while (cursor.moveToNext())
+        }
+        return result
+    }
+
+    override fun getAllNames(): List<String> {
+        return getAll().map { p -> p.name }
     }
 
     override fun insert(p: BEPerson) {
