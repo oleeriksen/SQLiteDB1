@@ -20,22 +20,22 @@ class PersonDao_Impl : IPersonDao {
 
     }
 
-    override fun getAll(): List<BEPerson> {
-        //val query = "select * from Person order by id"
-        val cursor = mDatabase.query("Person", arrayOf("id", "name", "age"), null, null, null, null, "id")
-        //val cursor = mDatabase.rawQuery(query, null)
+    override fun getAll(): Array<BEPerson> {
+        val query = "select * from Person order by id"
+        //val cursor = mDatabase.query("Person", arrayOf("id", "name", "age"), null, null, null, null, "id")
+        val cursor = mDatabase.rawQuery(query, null)
         val result = getByCursor(cursor)
         Log.d(MainActivity.TAG, "Dao Impl - getAll() returned ${result.size} persons")
-        return result
+        return result.toTypedArray()
     }
 
-    override fun getByName(s: String): List<BEPerson> {
+    override fun getByName(s: String): Array<BEPerson> {
         //val query = "select * from Person where name like '%s%' order by id"
         val cursor = mDatabase.query("Person", arrayOf("id", "name", "age"), "name LIKE '%$s%'", null, null, null, "id")
         //val cursor = mDatabase.rawQuery(query, null)
         val result = getByCursor(cursor)
         Log.d(MainActivity.TAG, "Dao Impl - getByName($s) returned ${result.size} persons")
-        return result
+        return result.toTypedArray()
     }
 
     override fun getById(id: Int): BEPerson {
@@ -65,8 +65,8 @@ class PersonDao_Impl : IPersonDao {
         return result
     }
 
-    override fun getAllNames(): List<String> {
-        return getAll().map { p -> p.name }
+    override fun getAllNames(): Array<String> {
+        return getAll().map { p -> p.name }.toTypedArray()
     }
 
     override fun insert(p: BEPerson) {

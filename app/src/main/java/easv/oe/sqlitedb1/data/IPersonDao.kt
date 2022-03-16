@@ -2,11 +2,11 @@ package easv.oe.sqlitedb1.data
 
 interface IPersonDao {
 
-    fun getAll(): List<BEPerson>
+    fun getAll(): Array<BEPerson>
 
-    fun getByName(s:String): List<BEPerson>
+    fun getByName(s:String): Array<BEPerson>
 
-    fun getAllNames(): List<String>
+    fun getAllNames(): Array<String>
 
     fun getById(id: Int): BEPerson
 

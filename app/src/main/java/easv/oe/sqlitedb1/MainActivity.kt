@@ -41,9 +41,9 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    var cache: List<BEPerson> = ArrayList<BEPerson>()
+    var cache: Array<BEPerson> = arrayOf()
 
-    private fun setAdapterforListView(persons: List<BEPerson>) {
+    private fun setAdapterforListView(persons: Array<BEPerson>) {
         Log.d(TAG, "Listview initialized")
         val asStrings = persons.map { p -> "${p.id}, ${p.name}"}
         val adapter: ListAdapter = ArrayAdapter(
